@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 import argparse
 
 # Set up the argument parser
-parser = argparse.ArgumentParser(description='Open and overlay imgaging data with its corresponding CSV file.')
-parser.add_argument('nii.gz_file', help='The path to the nii.gz file.')
+parser = argparse.ArgumentParser(description='Open and overlay a NIfTI file and its corresponding CSV file.')
+parser.add_argument('nifti_file', help='The path to the NIfTI file.')
 parser.add_argument('csv_file', help='The path to the CSV file.')
 args = parser.parse_args()
 
 # Load the NIfTI file
-nii_img = nib.load(args.nii.gz_file)
+nii_img = nib.load(args.nifti_file)
 nii_data = nii_img.get_fdata()
 
 # Load the CSV file
