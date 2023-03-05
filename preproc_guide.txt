@@ -1,0 +1,53 @@
+environment ./micromamba/bin/activate abide.venv
+
+localData_directory ./data/abide-master/download_abide_prepoc.py
+
+
+data_source  preprocessed-connectomes-project/abide 
+  CLI: gh repo clone preprocessed-connectomes-project/abide
+
+USAGE
+  In order to use 'download_abide_preproc.py' you need to specify a derivative, a pipeline, and a strategy to search for. 
+    [for complete toolkit ./data/abide-master/download_abide_preproc_guide.txt]
+    
+The following are the ones needed for this project:
+
+DERIVATIVES
+    - func_preproc (Preprocessed functional image)
+    - lfcd (Local functional connectivity density)
+    - reho (Regional homogeneity)
+    - rois_aal (Timeseries extracted from the Automated Anatomical Labeling atlas)
+    - rois_cc200 (" " from Cameron Craddock's 200 ROI parcellation atlas)
+    - rois_cc400 (" " " 400 ROI parcellation atlas)
+    - rois_dosenbach160 (" " from the Dosenbach160 atlas)
+    - rois_ez (" " from the Eickhoff-Zilles atlas)
+    - rois_ho (" " from the Harvard-Oxford atlas)
+    - rois_tt (" " from the Talaraich and Tournoux atlas)
+    - vmhc (Voxel-mirrored homotopic connectivity)
+
+PIPELINE
+  CCS: Center for Computational Sciences (CCS) is a software package developed at the University of Kentucky for analysis of magnetic resonance imaging (MRI) data. 
+  It provides a range of tools for processing and analyzing MRI data, including data conversion, image processing, and statistical analysis.
+  
+STRATEGIES
+  -nofilt_noglobal (neither global signal regression nor band-pass filtering)
+  
+OUT_DIR
+  - ./micromamba/envs/abide.venv/proccessed_data
+  
+SITE
+  *tbd*
+
+DIAGNOSIS
+  -'both' 
+  
+----SYNTAX/USAGE----
+python download_abide_preproc.py -d rois_all -p css -s nofilt_noglobal -o OUT_DIR
+  ________________________________________________________________________________________________________________________________
+  
+  - abide_rois.txt - text file with full paths to the ROI resources needed for timeseries extraction
+  
+  - map_dict_rerun - the mapping dictionary from raw output files to the S3-organized structure
+    rerun2_subs.yml - subject ids that needed to have raw outputs regenerated twice
+    
+  - subs_list.yml - full SITE_SUBID list of ABIDE subjects
