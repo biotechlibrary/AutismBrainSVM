@@ -1,23 +1,23 @@
-import numpy as np
 import nibabel as nib
 import pandas as pd
 import matplotlib.pyplot as plt
+import argparse
 
-# LOAD IMAGING DATA
+# Set up the argument parser
+parser = argparse.ArgumentParser(description='Open and overlay imgaging data with its corresponding CSV file.')
+parser.add_argument('nii.gz_file', help='The path to the nii.gz file.')
+parser.add_argument('csv_file', help='The path to the CSV file.')
+args = parser.parse_args()
 
-img = nib.load('ho_roi_atlas.nii.gz')
-data = img.get_fdata()
+# Load the NIfTI file
+nii_img = nib.load(args.nii.gz_file)
+nii_data = nii_img.get_fdata()
 
-# LOAD ANNOTATIONS
-df = pd.read_csv('ho_labels.csv')
+# Load the CSV file
+csv_data = pd.read_csv(args.csv_file)
 
-# Extract the relevant data columns
-x = df['x'].to_numpy()
-y = df['y'].to_numpy()
-z = df['z'].to_numpy()
-
-# PLOT AND OVERLAY
+# Overlay the CSV data onto the NIfTI image
 fig, ax = plt.subplots()
-ax.imshow(data[:, :, 0])
-ax.scatter(x, y, s=10, c=z, cmap='jet')
+ax.imshow(nii_data[:,:,0], cmap='gray')
+ax.scatter(csv_data['x'], csv_data['y'], c=csv_data['label'], s=10, cmap='viridis')
 plt.show()
