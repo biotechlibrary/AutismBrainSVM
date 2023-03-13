@@ -1,0 +1,53 @@
+Full steps to retrieve data can be found here:
+  -http://preprocessed-connectomes-project.org/abide/download.html 
+  -https://github.com/preprocessed-connectomes-project/abide/blob/master/download_abide_preproc.py
+ 
+ These are the steps pertinent to this project:
+ 
+      Things worth noting:
+ 
+ -The data is available to the public through the Amazon S3 bucket and can only be accessed using HTTP. 
+ Each file needs to be accessed by its literal name. I did everything through CLI, but there are GUIs available for MacOS X and Windows.
+ I have a Linux system, so CLI made sense for me. 
+ 
+ -SYNTAX usign download_abide_prepoc.py found in github.com/preprocessed-connectomes-project: 
+ 
+         python download_abide_prepoc,py -d <derivative> -p <pipeline>
+                                           -s <strategy> -o <out_dir>
+ ''' 
+ <derivative> is rois_ho
+ <pipeline> is ccs
+ <strategy> is filt_noglobal (band-pass filtering only)
+ <out_dir> is ~/micromamba/envs/extraction/data
+ '''
+ -It's best practice to create a virtual environment so you don't mess with dependencies locally. I made mine through conda CLI.
+ My virtual environment name is 'extraction' and directory is: ~/micromamba/envs/extraction
+ 
+ -Once you have your virtual environment and are in working directory:
+ 
+  Step #1
+  
+  in CLI: $ sudo apt install awscli
+  
+  Step #2
+  
+  in CLI: $ python3 download_abide_preproc.py -d rois_ho -p ccs -s filt_noglobal -o ~/micromamba/envs/extraction/data
+  
+  ___________________________________________
+  What we need: Structural/anatomical data, structural image processing, anatomical ROI for all patients 1-autistic & 2-control.
+  
+  How we get it: Through selecting the parameters below and using FSL toolkit [https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/] 
+  
+  IMPORTANT PARAMETER INFORMATION:
+  
+<derivative> Harvard-Oxford (HO): The HO atlas distributed with FSL is split into cortical and subcortical probabilistic atlases. A 25% threshold was applied to each of these atlases and they were subsequently bisected into left and right hemispheres at the midline (x=0). ROIs representing left/right WM, left/right GM, left/right CSF and brainstem were removed from the subcortical atlas. The subcortical and cortical ROIs were combined and then fractionated into functional resolution using nearest-neighbor interpolation.
+
+<pipeline> Connectome Computation System (CCS): Structural image preprocessing
+                                                MR denoised by a spatially adaptive non-local means filter (Xing et al., 2011; Zuo and Xing, 2011) using the extensions utility of VBM toolboxes of SPM8.
+                                                Skull stripped with FREESURFER step (-autorecon1), integrating with BET tool in FSL. Specifically, two fractional intensity thresholds, loose and tight, were used to extract brain in FSL. Subsequently, three brain masks, one from FREESURFER, two from BET were manually screened for users to choose the best one for the next surface reconstruction step. Occasionally, the bad skull strip were manual fixed in this step.
+                                                Surface reconstructed in FREESURFER (-autorecon2 and –autorecon3).
+                                                Normalized individual skull stripped brain according to MNI152 standard template (MNI152_T1_2mm_brain) with linear affine and followed by the nonlinear warp with FLIRT and FNIRT in FSL.
+
+
+      
+      
