@@ -1,0 +1,10 @@
+FSL is a neuroimaging analysis toolkit. For full documentation: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSL
+
+To begin the download process, register here: https://fsl.fmrib.ox.ac.uk/fsldownloads_registration
+Follow the rest of the prompts until you can download the installer. 
+
+I'd recommend creating a new virtual environment, I called mine image_analysis and stored it here: ~/micromamba/envs/image_analysis
+Save 'fslinstaller.py' in that directory. Once that's done, go ahead and run $ python3 fslinstaller.py
+
+*NOTE: It will ask you to confirm where in the directory you'd like to save the program. finish
+
