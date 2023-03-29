@@ -31,7 +31,7 @@ Full steps to retrieve data can be found here:
   
   Step #2
   
-  in CLI: $ python download_abide_preproc.py -d anat -p cpac -s noproj -o ~/micromamba/envs/extraction/data -a -c
+  in CLI: $ python3 download_abide_preproc.py -d anat -p cpac -s noproj -o ~/micromamba/envs/extraction/data -a -c
   
   ___________________________________________
   What we need: Structural/anatomical data, structural image processing, anatomical ROI for all patients 1-autistic & 2-control.
