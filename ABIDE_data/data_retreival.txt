@@ -15,9 +15,9 @@ Full steps to retrieve data can be found here:
          python download_abide_prepoc,py -d <derivative> -p <pipeline>
                                            -s <strategy> -o <out_dir>
  ''' 
- <derivative> is rois_ho
- <pipeline> is ccs
- <strategy> is filt_noglobal (band-pass filtering only)
+ <derivative> is anat
+ <pipeline> is cpac
+ <strategy> is noproj
  <out_dir> is ~/micromamba/envs/extraction/data
  '''
  -It's best practice to create a virtual environment so you don't mess with dependencies locally. I made mine through conda CLI.
@@ -31,7 +31,7 @@ Full steps to retrieve data can be found here:
   
   Step #2
   
-  in CLI: $ python3 download_abide_preproc.py -d rois_ho -p ccs -s filt_noglobal -o ~/micromamba/envs/extraction/data
+  in CLI: $ python download_abide_preproc.py -d anat -p cpac -s noproj -o ~/micromamba/envs/extraction/data -a -c
   
   ___________________________________________
   What we need: Structural/anatomical data, structural image processing, anatomical ROI for all patients 1-autistic & 2-control.
@@ -40,13 +40,17 @@ Full steps to retrieve data can be found here:
   
   IMPORTANT PARAMETER INFORMATION:
   
-<derivative> Harvard-Oxford (HO): The HO atlas distributed with FSL is split into cortical and subcortical probabilistic atlases. A 25% threshold was applied to each of these atlases and they were subsequently bisected into left and right hemispheres at the midline (x=0). ROIs representing left/right WM, left/right GM, left/right CSF and brainstem were removed from the subcortical atlas. The subcortical and cortical ROIs were combined and then fractionated into functional resolution using nearest-neighbor interpolation.
+<derivative> download anatomical images.
 
-<pipeline> Connectome Computation System (CCS): Structural image preprocessing
-                                                MR denoised by a spatially adaptive non-local means filter (Xing et al., 2011; Zuo and Xing, 2011) using the extensions utility of VBM toolboxes of SPM8.
-                                                Skull stripped with FREESURFER step (-autorecon1), integrating with BET tool in FSL. Specifically, two fractional intensity thresholds, loose and tight, were used to extract brain in FSL. Subsequently, three brain masks, one from FREESURFER, two from BET were manually screened for users to choose the best one for the next surface reconstruction step. Occasionally, the bad skull strip were manual fixed in this step.
-                                                Surface reconstructed in FREESURFER (-autorecon2 and –autorecon3).
-                                                Normalized individual skull stripped brain according to MNI152 standard template (MNI152_T1_2mm_brain) with linear affine and followed by the nonlinear warp with FLIRT and FNIRT in FSL.
+<pipeline>  use the CPAC pipeline for preprocessing. The Configurable Pipeline for the Analysis of Connectomes (CPAC) is a configurable software pipeline for the preprocessing and analysis of resting-state functional MRI (rfMRI) data. It is designed to be flexible and can be configured for a variety of analysis workflows, such as preprocessing with different software packages and pipelines, nuisance regression, functional connectivity analysis, and more.
+
+CPAC has been widely used in the field of connectomics and has been shown to produce high-quality preprocessing results. One of the strengths of CPAC is its configurability, which allows users to tailor the preprocessing and analysis workflows to their specific research questions and data characteristics.
+
+So, CPAC is a commonly used pipeline for preprocessing and analyzing resting-state fMRI data and can be used for a wide range of applications.
+
+<strategy> use the no-projection strategy for preprocessing. The no projection strategy in preprocessing refers to a method where a participant's functional magnetic resonance imaging (fMRI) data is not regressed against any confounding variables such as head motion or global signal. This is in contrast to other preprocessing strategies such as global signal regression or regression of motion parameters, which aim to remove unwanted variance from the data.
+
+The decision to use a particular preprocessing strategy is often based on the research question being investigated and the potential impact of different preprocessing methods on the results. In general, the no projection strategy may be preferred when investigating specific neural systems or regions that are less susceptible to the effects of head motion or other confounds. However, it is important to note that the no projection strategy may also introduce artifacts and other sources of noise into the data, and should be used with caution depending on the research question and specific study design.
 
 
       
