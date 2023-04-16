@@ -59,7 +59,7 @@ Once you have prepared the data, you can run the classification algorithm using 
 python classify_brain.py
 ```
 
-This script will load the data from the 'data/autistic' and 'data/control' folders, perform feature extraction, and train a Support Vector Machine classifier to distinguish between autistic and control conditions. The results will be displayed as classification accuracy, precission, recall, and F1-score.
+This script will load the data from the 'data/autistic' and 'data/control' folders, perform feature extraction, and train a Support Vector Machine classifier to distinguish between autistic and control conditions. The results will be displayed as classification accuracy, precision, recall, and F1-score.
 
 ## **Troubleshooting**
 
