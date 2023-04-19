@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from nilearn import datasets, input_data, image
@@ -11,7 +12,7 @@ atlas = datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm')
 masker = input_data.NiftiLabelsMasker(labels_img=atlas.maps, standardize=True)
 
 # Prepare the data
-data_path = 'data'
+data_path = '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/parsed_data'
 groups = ['autistic', 'control']
 X, y = [], []
 
