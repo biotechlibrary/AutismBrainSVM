@@ -12,7 +12,7 @@ atlas = datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm')
 masker = input_data.NiftiLabelsMasker(labels_img=atlas.maps, standardize=True)
 
 # Prepare the data
-data_path = '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/parsed_data'
+data_path = 'parsed_data'
 groups = ['autistic', 'control']
 X, y = [], []
 
@@ -37,8 +37,8 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-# Train the SVM classifier
-svm = SVC(kernel='linear')
+# Train the SVM classifier with the best hyperparameters
+svm = SVC(C=100, kernel='linear', shrinking=True, class_weight=None)
 svm.fit(X_train, y_train)
 
 # Make predictions on the test data
