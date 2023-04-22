@@ -41,25 +41,38 @@ To install the required packages, run the following command:
 ```
 pip install -r requirements.txt
 ```
-## **Data Preparation**
+## **Data Preparation and Preprocessing**
 
-Organize the data into separate folders for autistic and control groups using the provided Python script:
+1. Organize the data into separate folders for autistic and control groups using the provided Python script:
 
 ```
-python organize_data.py
+python data_sorter.py
 ```
 
-This script will create two folders `data/autistic` and `data/control`, and move the respective `.1D` and `.nii.gz` files into the appropriate group folders. 
+This script will create two folders `parsed_data/autistic` and `parsed_data/control`, and move the respective `.nii.gz` files into the appropriate group folders.
+
+2. Verify that the data is properly sorted into the respective folders. The data should be split into the following directories:
+
+- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/ccs
+- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/func_mean
+- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/func_preproc
+
+3. Process the data using the appropriate atlases and preprocessing methods. In the `brain_classifier.py` script, we use the following steps:
+
+- If your datasets have been preprocessed using different pipelines or atlases, you need to ensure that they are compatible before merging them. For this, you may need to perform additional preprocessing steps such as spatial smoothing, intensity normalization, or resampling to a common atlas. Consult the documentation of the preprocessing tools used for each dataset to understand the specific preprocessing steps and how they can be aligned.
+
+- In the `brain_classifier.py` script, the feature extraction is performed using the Harvard-Oxford cortical atlas, and the features are standardized using z-score normalization to ensure that all features have the same scale.
 
 ## **Running the Classification Algorithm**
 
-Once you have prepared the data, you can run the classification algorithm using the provided script:
+Once you have preprocessed your data and ensured it is compatible, run the `brain_classifier.py` script to train and evaluate the SVM classifier:
 
 ```
-python classify_brain.py
+python brain_classifier.py
 ```
 
-This script will load the data from the 'data/autistic' and 'data/control' folders, perform feature extraction, and train a Support Vector Machine classifier to distinguish between autistic and control conditions. The results will be displayed as classification accuracy, precision, recall, and F1-score.
+This script will load the data from the 'parsed_data/autistic' and 'parsed_data/control' folders, perform feature extraction, and train a Support Vector Machine classifier to distinguish between autistic and control conditions. The results will be displayed as classification accuracy and confusion matrix.
+
 
 ## **Troubleshooting**
 
