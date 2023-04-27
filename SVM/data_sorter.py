@@ -1,43 +1,45 @@
 import os
 import shutil
+import re
 import pandas as pd
 
-# Load the CSV metadata
-metadata_file = 'Phenotypic_V1_0b_preprocessed1.csv'
+def find_matching_row(file_id, metadata):
+    for _, row in metadata.iterrows():
+        if file_id in row.astype(str).apply(lambda x: x.lstrip('0')).values:
+            return row
+
+    raise ValueError(f"No matching metadata found for file ID {file_id}. This should not happen.")
+
+metadata_file = '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Phenotypic_V1_0b_preprocessed1.csv'
 metadata = pd.read_csv(metadata_file)
 
-# Define source directories
 source_dirs = [
-    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/ccs',
-    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/func_mean',
-    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/func_preproc',
+    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/ccs/filt_noglobal/rois_ho',
+    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/filt_noglobal/func_mean',
+    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/filt_noglobal/func_preproc',
 ]
 
-# Define destination directories
 dest_dirs = {
     'autistic': '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/parsed_data/autistic',
     'control': '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/parsed_data/control',
 }
 
-# Process files and move them to appropriate directories
+print("Starting to process files...")
+
 for src_dir in source_dirs:
+    print(f"Processing source directory: {src_dir}")
+    
     for file_name in os.listdir(src_dir):
-        file_parts = file_name.split('_')
+        print(f"Processing file: {file_name}")
         
-        # Assuming the subject ID is the second part of the file name
-        subject_id = file_parts[1]
-        
-        try:
-            # Find the matching row in the metadata
-            matching_row = metadata.loc[metadata['subject'] == int(subject_id)]
+        file_id = re.findall(r'\d+', file_name)[0]
+        matching_row = find_matching_row(file_id.lstrip('0'), metadata)
+
+        group = 'autistic' if matching_row['DX_GROUP'] == 1 else 'control'
             
-            if not matching_row.empty:
-                # Determine the group (autistic or control) based on the 'DX_GROUP' column
-                group = 'autistic' if matching_row['DX_GROUP'].values[0] == 1 else 'control'
-                
-                # Move the file to the appropriate destination directory
-                src_file_path = os.path.join(src_dir, file_name)
-                dest_file_path = os.path.join(dest_dirs[group], file_name)
-                shutil.move(src_file_path, dest_file_path)
-        except ValueError:
-            print(f"Skipping file with non-integer subject ID: {file_name}")
+        src_file_path = os.path.join(src_dir, file_name)
+        dest_file_path = os.path.join(dest_dirs[group], file_name)
+        shutil.move(src_file_path, dest_file_path)
+        print(f"Moved {file_name} to {group} directory.")
+
+print("Finished processing files.")
