@@ -1,13 +1,27 @@
+"""
+batch_nifti_resample.py
+
+This script is used to resample a batch of NIfTI files (*.nii.gz) using the FSL's FLIRT tool. The input files are
+resampled to a specified target resolution, and the output files are saved with the same file names as the input
+files. This script utilizes concurrent processing to speed up the resampling process.
+
+Usage:
+  python batch_nifti_resample.py <dir1> <dir2> <dir3>
+
+Arguments:
+  dir1, dir2, dir3: Paths to directories containing the NIfTI files to be resampled. You can add more directories
+                    as needed.
+
+Dependencies:
+  FSL: This script requires FSL to be installed on your system. Ensure that the path to the FLIRT executable is
+       correctly set in the script.
+"""
 import os
 import sys
 import glob
 import subprocess
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor
-from nilearn import datasets, image
-import os
-import resource
-import nilearn
 
 def resample_file(input_file, reference_file, output_file, target_resolution=2, interp_method='trilinear', flirt_path="/home/pau/fsl/bin/flirt"):
   
