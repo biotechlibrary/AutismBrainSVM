@@ -1,30 +1,51 @@
 import os
 import numpy as np
 import pandas as pd
-from nilearn import datasets, input_data, image
+from nilearn import datasets
+from nilearn.maskers import NiftiLabelsMasker
+from nilearn import image
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
+from cuml import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix
+from tqdm import tqdm
+import random
+import glob
+from concurrent.futures import ThreadPoolExecutor
+import concurrent
+
+random.seed(42)
+np.random.seed(42)
 
 # Load the atlas
 atlas = datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm')
-masker = input_data.NiftiLabelsMasker(labels_img=atlas.maps, standardize=True)
+masker = NiftiLabelsMasker(labels_img=atlas.maps, standardize=False)
 
 # Prepare the data
-data_path = 'parsed_data'
+data_path = '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/parsed_data'
 groups = ['autistic', 'control']
 X, y = [], []
 
-for i, group in enumerate(groups):
-    group_path = os.path.join(data_path, group)
-    for file in os.listdir(group_path):
-        file_path = os.path.join(group_path, file)
-        if file.endswith('.nii.gz'):
-            img = image.load_img(file_path)
-            features = masker.fit_transform(img)
-            X.append(np.mean(features, axis=0))
-            y.append(i)
+def process_file(file_path, group_idx):
+    img = image.load_img(file_path)
+    features = masker.fit_transform(img)
+    if features.shape[0] > 1:
+        features = np.mean(features, axis=0)
+    else:
+        features = features.ravel()
+    return features, group_idx
+
+with ThreadPoolExecutor() as executor:
+    futures = []
+    for i, group in enumerate(groups):
+        group_path = os.path.join(data_path, group)
+        for file_path in glob.glob(os.path.join(group_path, '*.nii.gz')):
+            futures.append(executor.submit(process_file, file_path, i))
+
+    for future in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
+        features, group_idx = future.result()
+        X.append(features)
+        y.append(group_idx)
 
 X = np.array(X)
 y = np.array(y)
