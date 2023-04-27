@@ -1,3 +1,16 @@
+"""
+data_sorter.py
+
+This script sorts fMRI data files into two directories, one for autistic subjects and one for control subjects. It reads
+the metadata from a CSV file and moves the data files based on their corresponding subject's diagnosis.
+
+Usage:
+    python data_sorter.py
+
+Requirements:
+    - pandas
+"""
+
 import os
 import shutil
 import re
