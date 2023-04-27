@@ -28,11 +28,18 @@ conda activate extraction
 pip install -r requirements.txt
 ```
 
+
 ## **Downloading ABIDE Data**
 
 1. Download the 'download_abide_preproc.py' script from the [Preprocessed Connectomes Project's ABIDE repository](https://github.com/preprocessed-connectomes-project/abide)
 
 2. Download the data using the download_abide_preproc.py script as mentioned in the 'data_retrieval.txt' file in the project directory ABIDE_data/data_retrieval.txt. Make sure to download the data into the 'Outputs' folder.
+
+3. Verify that the data is properly sorted into the respective folders. The data should be split into the following directories:
+
+- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/ccs
+- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/func_mean
+- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/func_preproc
 
 ## **Dependencies**
 
@@ -49,15 +56,18 @@ pip install -r requirements.txt
 python data_sorter.py
 ```
 
+
 This script will create two folders `parsed_data/autistic` and `parsed_data/control`, and move the respective `.nii.gz` files into the appropriate group folders.
 
-2. Verify that the data is properly sorted into the respective folders. The data should be split into the following directories:
+2. Resample the NIfTI files to the desired target resolution using the `batch_nifti_resample.py` script:
 
-- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/ccs
-- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/func_mean
-- /home/usr/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/func_preproc
+```
+python batch_nifti_resample.py <dir1> <dir2> <dir3>
+```
 
-3. Process the data using the appropriate atlases and preprocessing methods. In the `brain_classifier.py` script, we use the following steps:
+Replace `<dir1>`, `<dir2>`, and `<dir3>` with the paths to the directories containing the NIfTI files you want to resample. You can add more directories as needed.
+
+3. Process the data using the appropriate atlases and preprocessing methods. In the `brain_classifier.py` script we use the following steps: 
 
 - If your datasets have been preprocessed using different pipelines or atlases, you need to ensure that they are compatible before merging them. For this, you may need to perform additional preprocessing steps such as spatial smoothing, intensity normalization, or resampling to a common atlas. Consult the documentation of the preprocessing tools used for each dataset to understand the specific preprocessing steps and how they can be aligned.
 
