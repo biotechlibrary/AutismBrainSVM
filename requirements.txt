@@ -6,3 +6,4 @@ joblib==1.2.1
 nilearn==0.9.1
 pillow==9.0.0
 pyparsing==3.0.8
+tqdm==4.63.0
