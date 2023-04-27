@@ -1,3 +1,21 @@
+"""
+brain_classifier.py
+
+This script trains an SVM classifier on fMRI data to differentiate between autistic and control subjects.
+It uses the Yeo 2011 atlas for feature extraction and evaluates the classifier on a test set.
+
+Usage:
+    python brain_classifier.py
+
+Requirements:
+    - numpy
+    - pandas
+    - nilearn
+    - scikit-learn
+    - cuml
+    - tqdm
+"""
+
 import os
 import numpy as np
 import pandas as pd
@@ -18,8 +36,11 @@ random.seed(42)
 np.random.seed(42)
 
 # Load the atlas
-atlas = datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm')
-masker = NiftiLabelsMasker(labels_img=atlas.maps, standardize=False)
+atlas = datasets.fetch_atlas_yeo_2011()
+masker = NiftiLabelsMasker(labels_img=atlas.thick_7, standardize=False)
+
+# Rest of the script
+
 
 # Prepare the data
 data_path = '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/parsed_data'
