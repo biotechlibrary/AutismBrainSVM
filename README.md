@@ -6,7 +6,7 @@ This project aims to create a classification algorithm to identify anatomical di
 
 >Cameron Craddock, Yassine Benhajali, Carlton Chu, Francois Chouinard, Alan Evans, András Jakab, Budhachandra Singh Khundrakpam, John David Lewis, Qingyang Li, Michael Milham, Chaogan Yan, Pierre Bellec (2013). The Neuro Bureau Preprocessing Initiative: open sharing of preprocessed neuroimaging data and derivatives. In Neuroinformatics 2013, Stockholm, Sweden.
 
-##**Setting up a Conda Virtual Environment**
+## **Setting up a Conda Virtual Environment**
 
 1. Install Miniconda or Anaconda if you haven't already. You can download it from [HERE](https://docs.conda.io/en/latest/miniconda.html) 
 
