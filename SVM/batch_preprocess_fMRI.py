@@ -44,31 +44,31 @@ def preprocess_file(input_file, output_dir, target_resolution=2, flirt_path="/pa
     preprocessed_output_file = os.path.join(output_dir, file_name)
     os.rename(filter_output_file, preprocessed_output_file)
 
+    # 6. Regression of confounding variables (if necessary)
+    # Add this step if you need to regress out confounding variables such as motion parameters, CSF, or white matter signals.
+
+    # 7. Save the preprocessed data
+    preprocessed_output_file = os.path.join(output_dir, file_name)
+    os.rename(filter_output_file, preprocessed_output_file)
+
+    # 8. Extract time series from ROIs
+    atlas_file = "/path/to/atlas.nii.gz"  # Replace with the path to your atlas file
+    roi_ts_output_file = os.path.join(output_dir, f"{file_name_no_ext}_roi_ts.1D")
+    extract_cmd = f"{afni_path}3dROIstats -mask {atlas_file} -quiet -1Dformat {preprocessed_output_file} > {roi_ts_output_file}"
+    subprocess.run(extract_cmd, shell=True, check=True)
+
+    # 9. Generate correlation matrix
+    corr_matrix_output_file = os.path.join(output_dir, f"{file_name_no_ext}_corr_matrix.1D")
+    corr_cmd = f"{afni_path}1dCorrelate -pearson -full_first {roi_ts_output_file} {roi_ts_output_file} > {corr_matrix_output_file}"
+    subprocess.run(corr_cmd, shell=True, check=True)
+
+    # 10. Apply Fisher's r-to-z transformation
+    fisher_z_output_file = os.path.join(output_dir, f"{file_name_no_ext}_fisher_z.1D")
+    fisher_cmd = f"{afni_path}1dcalc -expr 'log((1+a)/(1-a))/2' -a {corr_matrix_output_file} > {fisher_z_output_file}"
+    subprocess.run(fisher_cmd, shell=True, check=True)
+
+    # 11. Save the final result
+    final_output_file = os.path.join(output_dir, f"{file_name_no_ext}_final_result.1D")
+    os.rename(fisher_z_output_file, final_output_file)
+
     return f"Preprocessed: {input_file}"
-
-def preprocess_file_unpack(args):
-    return preprocess_file(*args)
-
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python preprocess_sequential.py <dir1> <dir2> <dir3>")
-        sys.exit(1)
-
-    directories = sys.argv[1:]
-    nii_files = []
-
-    for directory in directories:
-        nii_files.extend(glob.glob(os.path.join(directory, "*.nii.gz")))
-
-    output_dir = "/path/to/output/directory"  # Replace with the path to your output directory
-
-    # Set the number of cores to be used for parallel processing
-    num_cores = 3  # You can set this to a specific number if you want to limit the cores used
-
-    # Use a process pool to parallelize the preprocessing
-    with ProcessPoolExecutor(max_workers=num_cores) as executor:
-        args_list = [(nii_file, output_dir) for nii_file in nii_files]
-        results = list(tqdm(executor.map(preprocess_file_unpack, args_list), total=len(nii_files), desc="Preprocessing files"))
-
-    for result in results:
-        print(result)
