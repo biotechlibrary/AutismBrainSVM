@@ -6,6 +6,28 @@ from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor
 
 def preprocess_file(input_file, output_dir, target_resolution=2, flirt_path="/path/to/fsl/bin/flirt", afni_path="/path/to/afni/bin/"):
+    """
+    Preprocesses a single fMRI file using a series of steps, including motion correction, slice timing correction, spatial
+    normalization, spatial smoothing, temporal filtering, regression of confounding variables (if necessary), extraction of
+    time series from ROIs, calculation of a correlation matrix, and application of Fisher's r-to-z transformation.
+
+    Args:
+        input_file (str): Path to the input fMRI file to preprocess.
+        output_dir (str): Path to the output directory to save the preprocessed files.
+        target_resolution (float): The target spatial resolution for the spatial normalization step (default=2).
+        flirt_path (str): Path to the FSL flirt command-line tool (default="/path/to/fsl/bin/flirt").
+        afni_path (str): Path to the AFNI command-line tools (default="/path/to/afni/bin/").
+
+    Returns:
+        str: A message indicating that the input file has been preprocessed.
+
+    Raises:
+        subprocess.CalledProcessError: If any of the preprocessing steps fail.
+
+    Example:
+        >>> preprocess_file('/path/to/input_file.nii.gz', '/path/to/output_dir/', target_resolution=3)
+
+    """
     # Prepare paths and file names
     file_name = os.path.basename(input_file)
     file_name_no_ext = os.path.splitext(os.path.splitext(file_name)[0])[0]
