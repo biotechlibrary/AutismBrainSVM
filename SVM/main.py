@@ -1,28 +1,39 @@
-import os
-import numpy as np
 from analyze_preprocessed_fmri import analyze_preprocessed_fmri
-from feature_extraction import extract_features
-from brain_classifier import run_classifier
+import os
+import glob
+import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 
-**ASK CHATGPT: In main.py,how can I define the input_files variable using the proper results from previous scripts? Is there a way to automate this easily, without it being computationally expensive?**
+# Set the input and output directories
+control_dir = '/path/to/control/fmri_data'
+autistic_dir = '/path/to/autistic/fmri_data'
+output_dir = '/path/to/output_dir'
 
-# Replace with the list of input files and their corresponding labels
-input_files = [...]
-labels = np.array([...])
+# Get the list of input files
+control_files = sorted(glob.glob(os.path.join(control_dir, "*.nii.gz")))
+autistic_files = sorted(glob.glob(os.path.join(autistic_dir, "*.nii.gz")))
 
-# Output directory
-output_dir = "/path/to/output_dir"
+# Define a function to process a single file and return its label and correlation matrix
+def process_file(file_path, group_label, output_dir):
+    fisher_z_matrix = analyze_preprocessed_fmri(file_path, output_dir)
+    return group_label, fisher_z_matrix
 
-# Process files in parallel using multiple CPU cores
+# Process all files in parallel using concurrent.futures
+correlation_matrices = []
+labels = []
+
 with ProcessPoolExecutor() as executor:
-    correlation_matrices = list(executor.map(analyze_preprocessed_fmri, input_files, [output_dir] * len(input_files)))
+    control_results = executor.map(process_file, control_files, ['control'] * len(control_files), [output_dir] * len(control_files))
+    autistic_results = executor.map(process_file, autistic_files, ['autistic'] * len(autistic_files), [output_dir] * len(autistic_files))
 
-# Save correlation matrices to disk
-np.save(os.path.join(output_dir, "correlation_matrices.npy"), correlation_matrices)
+    for group_label, fisher_z_matrix in control_results:
+        labels.append(group_label)
+        correlation_matrices.append(fisher_z_matrix)
 
-# Extract features from the correlation matrices
-features = extract_features(correlation_matrices)
+    for group_label, fisher_z_matrix in autistic_results:
+        labels.append(group_label)
+        correlation_matrices.append(fisher_z_matrix)
 
-# Run the classifier
-run_classifier(features, labels)
+# Save the correlation matrices and labels to disk
+np.save(os.path.join(output_dir, 'correlation_matrices.npy'), correlation_matrices)
+np.save(os.path.join(output_dir, 'labels.npy'), labels)
