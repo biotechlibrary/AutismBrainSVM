@@ -1,6 +1,6 @@
-
 import os
 import subprocess
+import numpy as np
 
 def analyze_preprocessed_fmri(input_file, output_dir, afni_path="/path/to/afni/bin/"):
     """
@@ -13,13 +13,13 @@ def analyze_preprocessed_fmri(input_file, output_dir, afni_path="/path/to/afni/b
         afni_path (str): Path to the AFNI command-line tools (default="/path/to/afni/bin/").
 
     Returns:
-        str: A message indicating that the input file has been analyzed.
+        numpy.ndarray: The Fisher z-transformed correlation matrix as a NumPy array.
 
     Raises:
         subprocess.CalledProcessError: If any of the analysis steps fail.
 
     Example:
-        >>> analyze_preprocessed_fmri('/path/to/input_file.nii.gz', '/path/to/output_dir/')
+        >>> fisher_z_matrix = analyze_preprocessed_fmri('/path/to/input_file.nii.gz', '/path/to/output_dir/')
     """
 
     # Prepare paths and file names
@@ -42,6 +42,7 @@ def analyze_preprocessed_fmri(input_file, output_dir, afni_path="/path/to/afni/b
     fisher_cmd = f"{afni_path}1dcalc -expr 'log((1+a)/(1-a))/2' -a {corr_matrix_output_file} > {fisher_z_output_file}"
     subprocess.run(fisher_cmd, shell=True, check=True)
 
-    return f"Analyzed: {input_file}"
+    # Load the Fisher z-transformed correlation matrix as a NumPy array
+    fisher_z_matrix = np.loadtxt(fisher_z_output_file)
 
-  
+    return fisher_z_matrix
