@@ -1,16 +1,3 @@
-"""
-data_sorter.py
-
-This script sorts fMRI data files into two directories, one for autistic subjects and one for control subjects. It reads
-the metadata from a CSV file and moves the data files based on their corresponding subject's diagnosis.
-
-Usage:
-    python data_sorter.py
-
-Requirements:
-    - pandas
-"""
-
 import os
 import shutil
 import re
@@ -27,9 +14,8 @@ metadata_file = '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Phenoty
 metadata = pd.read_csv(metadata_file)
 
 source_dirs = [
-    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/ccs/filt_noglobal/rois_ho',
-    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/filt_noglobal/func_mean',
-    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/filt_noglobal/func_preproc',
+    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/filt_noglobal/func_mean/func_mean',
+    '/home/pau/micromamba/envs/extraction/AutismBrainSVM/SVM/Outputs/cpac/filt_noglobal/func_preproc/func_preproc',
 ]
 
 dest_dirs = {
@@ -43,16 +29,18 @@ for src_dir in source_dirs:
     print(f"Processing source directory: {src_dir}")
     
     for file_name in os.listdir(src_dir):
-        print(f"Processing file: {file_name}")
-        
-        file_id = re.findall(r'\d+', file_name)[0]
-        matching_row = find_matching_row(file_id.lstrip('0'), metadata)
-
-        group = 'autistic' if matching_row['DX_GROUP'] == 1 else 'control'
+        if file_name.endswith('.nii.gz'):
+            print(f"Processing file: {file_name}")
             
-        src_file_path = os.path.join(src_dir, file_name)
-        dest_file_path = os.path.join(dest_dirs[group], file_name)
-        shutil.move(src_file_path, dest_file_path)
-        print(f"Moved {file_name} to {group} directory.")
+            file_id = re.findall(r'\d+', file_name)[0]
+            matching_row = find_matching_row(file_id.lstrip('0'), metadata)
+
+            group = 'autistic' if matching_row['DX_GROUP'] == 1 else 'control'
+                
+            src_file_path = os.path.join(src_dir, file_name)
+            dest_file_path = os.path.join(dest_dirs[group], file_name)
+                      
+            shutil.move(src_file_path, dest_file_path)
+            print(f"Moved {file_name} to {group} directory.")
 
 print("Finished processing files.")
