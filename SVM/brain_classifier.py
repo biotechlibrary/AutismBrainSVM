@@ -6,6 +6,25 @@ from sklearn.metrics import classification_report, accuracy_score
 import joblib
 
 def train_and_evaluate_classifier(features, labels, output_dir):
+    """
+    This function performs the training and evaluation of a Support Vector Machine (SVM) classifier.
+    It uses grid search for hyperparameter tuning.
+
+    Parameters
+    ----------
+    features : np.array
+        A numpy array representing the feature matrix.
+    labels : np.array
+        A numpy array representing the target labels.
+    output_dir : str
+        The directory where the trained model will be saved.
+
+    Returns
+    -------
+    None
+        The function saves the trained model to a .pkl file and does not return any value.
+
+    """
     X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
     svm = SVC()
