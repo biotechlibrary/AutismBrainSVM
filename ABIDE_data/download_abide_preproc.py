@@ -3,6 +3,8 @@
 # Author: Daniel Clark, 2015
 # Updated to python 3 and to support downloading by DX, Cameron Craddock, 2019
 
+# Modified by Pau Rotger Gonzalez, 2023.
+
 """
 This script downloads data from the Preprocessed Connetomes Project's
 ABIDE Preprocessed data release and stores the files in a local
@@ -20,7 +22,6 @@ Usage:
 # Main collect and download function
 def collect_and_download(derivative, pipeline, strategy, out_dir, less_than, greater_than, site, sex, diagnosis):
     """
-
     Function to collect and download images from the ABIDE preprocessed
     directory on FCP-INDI's S3 bucket
 
@@ -51,17 +52,6 @@ def collect_and_download(derivative, pipeline, strategy, out_dir, less_than, gre
     None
         this function does not return a value; it downloads data from
         S3 to a local directory
-
-    :param derivative: 
-    :param pipeline: 
-    :param strategy: 
-    :param out_dir: 
-    :param less_than: 
-    :param greater_than: 
-    :param site: 
-    :param sex:
-    :param diagnosis:
-    :return: 
     """
 
     # Import packages
