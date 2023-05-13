@@ -35,6 +35,22 @@ control_files = sorted(glob.glob(os.path.join(control_dir, "*.nii.gz")))
 autistic_files = sorted(glob.glob(os.path.join(autistic_dir, "*.nii.gz")))
 
 def process_file(args):
+    """
+    This function applies the 'analyze_preprocessed_fmri' function to a given fMRI file and returns the group label 
+    and the Fisher-Z transformed correlation matrix.
+
+    Parameters
+    ----------
+    args : tuple
+        A tuple containing the file path and the group label.
+
+    Returns
+    -------
+    group_label : str
+        The label of the group that the fMRI file belongs to ('control' or 'autistic').
+    fisher_z_matrix : np.array
+        The Fisher-Z transformed correlation matrix of the fMRI file.
+    """
     file_path, group_label = args
     fisher_z_matrix = analyze_preprocessed_fmri(file_path, atlas_path)
     return group_label, fisher_z_matrix
