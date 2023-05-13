@@ -4,6 +4,31 @@ import re
 import pandas as pd
 
 def find_matching_row(file_id, metadata):
+     """
+    This function finds and returns the metadata row that matches a given file ID.
+    It raises a ValueError if no matching metadata is found.
+
+    Parameters
+    ----------
+    file_id : str
+        The ID of the file to match.
+    metadata : pd.DataFrame
+        The metadata DataFrame to search for the matching file ID.
+
+    Returns
+    -------
+    row : pd.Series
+        The matching row in the metadata DataFrame.
+
+    Raises
+    ------
+    ValueError
+        If no matching metadata is found for the file ID.
+    """
+    for _, row in metadata.iterrows():
+        if file_id in row.astype(str).apply(lambda x: x.lstrip('0')).values:
+            return row
+
     for _, row in metadata.iterrows():
         if file_id in row.astype(str).apply(lambda x: x.lstrip('0')).values:
             return row
