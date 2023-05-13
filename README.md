@@ -1,6 +1,6 @@
 # **Autism Brain Classification using Support Vector Machines**
 
-This project aims to create a classification algorithm to identify anatomical differences in autistic brains compared to control conditions using support vector machines (SVM) in scikit-learn. The input data is preprocessed functional MRI (fMRI) files in NIfTI format (.nii.gz), which will be downloaded from the ABIDE dataset.
+This project is an exploration into the feasibility and effectiveness of using Support Vector Machine (SVM) classifiers to analyze and classify neuroimaging data from Autism Spectrum Disorders (ASD) patients, with considerations for improving accuracy through informed data selection and interpretation of comprehensive performance metrics.
 
 **Special thanks to the Autism Brain Imaging Data Exchange, an open-source initiative that made this project   possible:** 
 
