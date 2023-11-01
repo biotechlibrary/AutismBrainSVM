@@ -4,7 +4,7 @@ nibabel==3.2.1
 scikit-learn==1.1.0
 joblib==1.2.0
 nilearn==0.9.1
-pillow==9.0.0
+pillow==10.0.1
 glob2==0.7
 pyparsing==3.0.8
 tqdm==4.63.0
